@@ -58,8 +58,10 @@ function ThemePage() {
       />
 
       <Callout tone="info" title="Cách đổi màu thương hiệu">
-        Sửa <code>--brand</code> trong <code>:root</code> và <code>.dark</code>. Ví dụ màu xanh dương:{" "}
-        <code>oklch(0.55 0.2 255)</code>. Toàn bộ logo, avatar và điểm nhấn sẽ đổi theo.
+        Chọn nhanh 6 tông dựng sẵn ở menu tài khoản → <strong>Tông màu</strong>; lựa chọn được lưu
+        vào localStorage. Muốn đổi màu mặc định thì sửa <code>--brand</code> trong{" "}
+        <code>:root</code> và <code>.dark</code> — ví dụ <code>oklch(0.55 0.2 255)</code>. Toàn bộ
+        logo, avatar và điểm nhấn sẽ đổi theo.
       </Callout>
 
       <SectionCard title="Token ngữ nghĩa" description="Dùng qua class Tailwind: bg-card, text-muted-foreground...">

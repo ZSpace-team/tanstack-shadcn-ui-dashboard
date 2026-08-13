@@ -2,6 +2,7 @@ import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
 
+import { AccentPreferenceProvider } from "@/components/admin/accent-preference-provider";
 import AdminSidebar from "@/components/admin/admin-sidebar";
 import AdminTopbar from "@/components/admin/admin-topbar";
 import { FontPreferenceProvider } from "@/components/admin/font-preference-provider";
@@ -22,10 +23,12 @@ function RootLayout() {
       disableTransitionOnChange
     >
       <FontPreferenceProvider>
-        <SessionProvider>
-          <AdminShell />
-          <Toaster position="top-right" />
-        </SessionProvider>
+        <AccentPreferenceProvider>
+          <SessionProvider>
+            <AdminShell />
+            <Toaster position="top-right" />
+          </SessionProvider>
+        </AccentPreferenceProvider>
       </FontPreferenceProvider>
     </ThemeProvider>
   );

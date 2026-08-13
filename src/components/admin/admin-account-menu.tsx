@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getInitials, useSession } from "@/lib/session";
 
+import AccentSwitcher from "./accent-switcher";
 import FontSwitcher from "./font-switcher";
 import ThemeSwitcher from "./theme-switcher";
 
@@ -66,6 +67,7 @@ export default function AdminAccountMenu() {
           </DropdownMenuItem>
 
           <ThemeSwitcher />
+          <AccentSwitcher />
           <FontSwitcher />
 
           <DropdownMenuSeparator />

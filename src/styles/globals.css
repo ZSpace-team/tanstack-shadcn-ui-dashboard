@@ -145,6 +145,54 @@
 }
 
 /* ---------------------------------------------------------------------------
+ * TÔNG MÀU CHỦ ĐẠO — đổi được ngay trên giao diện qua AccentSwitcher.
+ * Mỗi tông giữ nguyên độ sáng (L) để tương phản với chữ trắng luôn đồng đều;
+ * chỉ đổi hue và chroma. Bản dark sáng hơn một chút cho dễ nhìn trên nền tối.
+ * Muốn thêm tông mới: khai báo một khối ở đây rồi thêm vào ACCENT_PREFERENCES
+ * trong src/components/admin/accent-preference-provider.tsx.
+ * ------------------------------------------------------------------------- */
+
+:root[data-accent="amber"] {
+  --brand: oklch(0.59 0.15 55);
+}
+
+:root[data-accent="emerald"] {
+  --brand: oklch(0.59 0.14 155);
+}
+
+:root[data-accent="teal"] {
+  --brand: oklch(0.59 0.11 200);
+}
+
+:root[data-accent="blue"] {
+  --brand: oklch(0.59 0.19 258);
+}
+
+:root[data-accent="violet"] {
+  --brand: oklch(0.59 0.21 300);
+}
+
+:root.dark[data-accent="amber"] {
+  --brand: oklch(0.63 0.14 55);
+}
+
+:root.dark[data-accent="emerald"] {
+  --brand: oklch(0.63 0.13 155);
+}
+
+:root.dark[data-accent="teal"] {
+  --brand: oklch(0.63 0.1 200);
+}
+
+:root.dark[data-accent="blue"] {
+  --brand: oklch(0.63 0.18 258);
+}
+
+:root.dark[data-accent="violet"] {
+  --brand: oklch(0.63 0.2 300);
+}
+
+/* ---------------------------------------------------------------------------
  * PHÔNG CHỮ — đổi được ngay trên giao diện qua FontSwitcher.
  * ------------------------------------------------------------------------- */
 
