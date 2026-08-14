@@ -7,6 +7,7 @@ import AdminSidebar from "@/components/admin/admin-sidebar";
 import AdminTopbar from "@/components/admin/admin-topbar";
 import { FontPreferenceProvider } from "@/components/admin/font-preference-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { NotificationsProvider } from "@/lib/notifications";
 import { SessionProvider, useSession } from "@/lib/session";
 
 export const Route = createRootRoute({ component: RootLayout });
@@ -25,8 +26,10 @@ function RootLayout() {
       <FontPreferenceProvider>
         <AccentPreferenceProvider>
           <SessionProvider>
-            <AdminShell />
-            <Toaster position="top-right" />
+            <NotificationsProvider>
+              <AdminShell />
+              <Toaster position="top-right" />
+            </NotificationsProvider>
           </SessionProvider>
         </AccentPreferenceProvider>
       </FontPreferenceProvider>
@@ -55,7 +58,7 @@ function AdminShell() {
     });
 
   return (
-    <div className="flex h-svh overflow-hidden bg-background">
+    <div className="flex h-full overflow-hidden bg-background">
       <AdminSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -63,7 +66,7 @@ function AdminShell() {
         onToggleCollapse={toggleCollapse}
         permissions={permissions}
       />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <AdminTopbar onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6">
           <Outlet />

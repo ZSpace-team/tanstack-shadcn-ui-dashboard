@@ -1,11 +1,11 @@
-import { Search, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { fieldInputClass, fieldLabelClass } from "./field";
+import { fieldInputClass } from "./field";
 
 export interface FilterOption {
   value: string;
@@ -20,6 +20,13 @@ export interface FilterDefinition {
   allLabel?: string;
 }
 
+/** Chip do trang tự dựng — dùng cho điều kiện đến từ bộ lọc nâng cao. */
+export interface FilterChip {
+  key: string;
+  label: string;
+  onRemove: () => void;
+}
+
 export interface FilterBarProps {
   /** Ô tìm kiếm; bỏ `onSearchChange` để ẩn. */
   search?: string;
@@ -29,6 +36,14 @@ export interface FilterBarProps {
   filters?: FilterDefinition[];
   values?: Record<string, string>;
   onValuesChange?: (values: Record<string, string>) => void;
+  /** Mở panel lọc nâng cao; bỏ trống để ẩn nút. */
+  onOpenAdvanced?: () => void;
+  /** Số điều kiện nâng cao đang áp dụng — hiện thành badge trên nút. */
+  advancedCount?: number;
+  /** Chip cho điều kiện nâng cao, hiển thị cùng hàng với chip của `filters`. */
+  chips?: FilterChip[];
+  /** Gọi thêm khi bấm "Xoá tất cả" — dùng để reset bộ lọc nâng cao. */
+  onClearAll?: () => void;
   /** Nút bên phải: xuất file, thêm mới... */
   actions?: ReactNode;
   className?: string;
@@ -45,6 +60,10 @@ export function FilterBar({
   filters = [],
   values = {},
   onValuesChange,
+  onOpenAdvanced,
+  advancedCount = 0,
+  chips = [],
+  onClearAll,
   actions,
   className,
 }: FilterBarProps) {
@@ -61,15 +80,22 @@ export function FilterBar({
       const value = values[filter.key];
       if (!value) return null;
       const option = filter.options.find((item) => item.value === value);
-      return option ? { key: filter.key, label: `${filter.label}: ${option.label}` } : null;
+      return option
+        ? {
+            key: filter.key,
+            label: `${filter.label}: ${option.label}`,
+            onRemove: () => setValue(filter.key, ""),
+          }
+        : null;
     })
-    .filter((chip): chip is { key: string; label: string } => chip !== null);
+    .filter((chip): chip is FilterChip => chip !== null)
+    .concat(chips);
 
   const hasActive = activeChips.length > 0 || search.length > 0;
 
   return (
     <div className={cn("space-y-3 rounded-xl border border-border bg-card p-4", className)}>
-      <div className="flex flex-wrap items-end gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {onSearchChange && (
           <div className="relative min-w-56 flex-1">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -82,23 +108,35 @@ export function FilterBar({
           </div>
         )}
 
+        {/* Lọc nhanh không cần nhãn — chính lựa chọn "Tất cả ..." đã nói rõ đang lọc gì. */}
         {filters.map((filter) => (
-          <label key={filter.key} className="space-y-1.5">
-            <span className={fieldLabelClass}>{filter.label}</span>
-            <select
-              value={values[filter.key] ?? ""}
-              onChange={(event) => setValue(filter.key, event.target.value)}
-              className={cn(fieldInputClass, "w-44")}
-            >
-              <option value="">{filter.allLabel ?? "Tất cả"}</option>
-              {filter.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <select
+            key={filter.key}
+            aria-label={filter.label}
+            value={values[filter.key] ?? ""}
+            onChange={(event) => setValue(filter.key, event.target.value)}
+            className={cn(fieldInputClass, "w-44")}
+          >
+            <option value="">{filter.allLabel ?? `Tất cả ${filter.label.toLowerCase()}`}</option>
+            {filter.options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         ))}
+
+        {onOpenAdvanced && (
+          <Button variant="outline" size="lg" onClick={onOpenAdvanced}>
+            <SlidersHorizontal className="size-4" />
+            Bộ lọc
+            {advancedCount > 0 && (
+              <span className="ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[10px] leading-none font-semibold text-brand-foreground tabular-nums">
+                {advancedCount}
+              </span>
+            )}
+          </Button>
+        )}
 
         {actions && <div className="ml-auto flex items-center gap-2">{actions}</div>}
       </div>
@@ -126,7 +164,7 @@ export function FilterBar({
               {chip.label}
               <button
                 type="button"
-                onClick={() => setValue(chip.key, "")}
+                onClick={chip.onRemove}
                 aria-label={`Bỏ lọc ${chip.label}`}
                 className="transition-colors hover:text-foreground"
               >
@@ -142,6 +180,7 @@ export function FilterBar({
             onClick={() => {
               onSearchChange?.("");
               onValuesChange?.({});
+              onClearAll?.();
             }}
           >
             Xoá tất cả

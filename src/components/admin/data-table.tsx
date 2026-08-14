@@ -138,8 +138,8 @@ export function DataTable<T extends Record<string, unknown>>({
           {emptyAction && <div className="mt-4">{emptyAction}</div>}
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <Table className="text-sm tabular-nums">
+        // `Table` đã tự bọc vùng cuộn ngang — không bọc thêm để tránh hai thanh cuộn.
+        <Table className="text-sm tabular-nums">
             <TableHeader>
               <TableRow>
                 {selectable && (
@@ -228,9 +228,8 @@ export function DataTable<T extends Record<string, unknown>>({
                   </TableRow>
                 );
               })}
-            </TableBody>
-          </Table>
-        </div>
+          </TableBody>
+        </Table>
       )}
 
       {/* Giữ số cột ổn định cho công cụ đọc màn hình khi bảng rỗng. */}

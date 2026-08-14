@@ -4,11 +4,15 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { Callout } from "@/components/admin/callout";
+import { CheckboxGroup, RadioGroup } from "@/components/admin/choice-group";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
+import { DateField, DateRangeField } from "@/components/admin/date-field";
 import { Drawer } from "@/components/admin/drawer";
 import { EmptyState } from "@/components/admin/empty-state";
 import { fieldInputClass } from "@/components/admin/field";
+import { FormField } from "@/components/admin/form";
 import Modal from "@/components/admin/modal";
+import { MultiSelect } from "@/components/admin/multi-select";
 import PageHeader from "@/components/admin/page-header";
 import { SectionCard } from "@/components/admin/section-card";
 import { StatusBadge } from "@/components/admin/status-badge";
@@ -22,8 +26,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useNotifications } from "@/lib/notifications";
 
 export const Route = createFileRoute("/components")({ component: ComponentsPage });
+
+const TAG_OPTIONS = ["Điện tử", "Thời trang", "Gia dụng", "Sách"].map((item) => ({
+  value: item,
+  label: item,
+}));
 
 const BUTTON_VARIANTS = ["default", "outline", "secondary", "ghost", "destructive", "link"] as const;
 const BUTTON_SIZES = ["xs", "sm", "default", "lg"] as const;
@@ -37,6 +47,12 @@ function ComponentsPage() {
   const [checked, setChecked] = useState(true);
   const [switched, setSwitched] = useState(true);
   const [pillTab, setPillTab] = useState("day");
+  const [tags, setTags] = useState<string[]>(["Điện tử"]);
+  const [checkGroup, setCheckGroup] = useState<string[]>(["Điện tử"]);
+  const [radio, setRadio] = useState("Điện tử");
+  const [date, setDate] = useState("");
+  const [range, setRange] = useState({ from: "", to: "" });
+  const { push } = useNotifications();
 
   return (
     <TooltipProvider>
@@ -120,6 +136,72 @@ function ComponentsPage() {
                   <Switch checked={switched} onCheckedChange={setSwitched} aria-label="Công tắc" />
                   Switch
                 </label>
+              </div>
+            </div>
+          </SectionCard>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <SectionCard
+            title="Chọn nhiều & nhóm lựa chọn"
+            description="Dùng trong panel lọc nâng cao của trang danh sách."
+          >
+            <div className="space-y-4">
+              <FormField label="Chọn nhiều (MultiSelect)" htmlFor="demo-multi">
+                <MultiSelect
+                  id="demo-multi"
+                  options={TAG_OPTIONS}
+                  value={tags}
+                  onValueChange={setTags}
+                  placeholder="Tất cả danh mục"
+                />
+              </FormField>
+              <FormField label="Nhóm checkbox">
+                <CheckboxGroup
+                  options={TAG_OPTIONS}
+                  value={checkGroup}
+                  onValueChange={setCheckGroup}
+                />
+              </FormField>
+              <FormField label="Nhóm radio">
+                <RadioGroup
+                  name="demo-radio"
+                  options={TAG_OPTIONS}
+                  value={radio}
+                  onValueChange={setRadio}
+                  columns={2}
+                />
+              </FormField>
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Ngày & giờ" description="Dùng bộ chọn sẵn có của trình duyệt.">
+            <div className="space-y-4">
+              <FormField label="Ngày giờ" htmlFor="demo-datetime">
+                <DateField id="demo-datetime" withTime value={date} onChange={setDate} />
+              </FormField>
+              <FormField label="Khoảng ngày" htmlFor="demo-range">
+                <DateRangeField id="demo-range" value={range} onChange={setRange} />
+              </FormField>
+              <Separator />
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Chuông thông báo nằm trên topbar — bấm nút dưới đây để đẩy thêm một thông báo
+                  chưa đọc và xem badge tăng.
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    push({
+                      tone: "info",
+                      title: "Thông báo giả lập",
+                      description: "Tạo từ trang thư viện component.",
+                    })
+                  }
+                >
+                  <Bell className="size-4" />
+                  Đẩy thông báo mới
+                </Button>
               </div>
             </div>
           </SectionCard>

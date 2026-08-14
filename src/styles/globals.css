@@ -223,12 +223,23 @@
 
   html {
     @apply font-sans;
+    height: 100%;
   }
 
+  /*
+   * Shell chiếm trọn viewport và chỉ vùng nội dung tự cuộn.
+   * Khoá cuộn ở body để không xuất hiện thanh cuộn thứ hai của cửa sổ.
+   */
   body {
     @apply bg-background font-sans text-foreground;
     font-size: var(--text-base);
     line-height: var(--text-base--line-height);
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #root {
+    height: 100%;
   }
 
   /* Thanh cuộn mảnh, hoà với nền thay vì cắt ngang bố cục. */

@@ -21,6 +21,7 @@ export function Drawer({
   children,
   footer,
   size = "md",
+  padded = true,
 }: {
   open: boolean;
   onClose: () => void;
@@ -29,6 +30,8 @@ export function Drawer({
   children: ReactNode;
   footer?: ReactNode;
   size?: keyof typeof WIDTH;
+  /** Tắt padding khi bên trong là danh sách tràn viền. */
+  padded?: boolean;
 }) {
   useEffect(() => {
     if (!open) return;
@@ -67,7 +70,7 @@ export function Drawer({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
+        <div className={cn("flex-1 overflow-y-auto", padded && "px-5 py-4")}>{children}</div>
 
         {footer && (
           <div className="flex justify-end gap-2 border-t border-border px-5 py-4">{footer}</div>

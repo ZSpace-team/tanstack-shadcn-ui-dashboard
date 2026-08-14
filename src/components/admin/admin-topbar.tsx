@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 import AdminAccountMenu from "./admin-account-menu";
 import AdminBrand from "./admin-brand";
+import AdminNotifications from "./admin-notifications";
 
 export default function AdminTopbar({
   onMenuClick,
@@ -28,7 +29,8 @@ export default function AdminTopbar({
 
       <div className="hidden min-w-0 flex-1 lg:block">{children}</div>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-1 sm:gap-2">
+        <AdminNotifications />
         <AdminAccountMenu />
       </div>
     </header>
