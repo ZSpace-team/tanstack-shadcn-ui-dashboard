@@ -13,6 +13,11 @@ import { fieldInputClass } from "@/components/admin/field";
 import { FormField } from "@/components/admin/form";
 import Modal from "@/components/admin/modal";
 import { MultiSelect } from "@/components/admin/multi-select";
+import {
+  Pipeline,
+  type PipelineStep,
+  type PipelineVariant,
+} from "@/components/admin/pipeline";
 import PageHeader from "@/components/admin/page-header";
 import { SectionCard } from "@/components/admin/section-card";
 import { StatusBadge } from "@/components/admin/status-badge";
@@ -38,6 +43,41 @@ const TAG_OPTIONS = ["Điện tử", "Thời trang", "Gia dụng", "Sách"].map(
 const BUTTON_VARIANTS = ["default", "outline", "secondary", "ghost", "destructive", "link"] as const;
 const BUTTON_SIZES = ["xs", "sm", "default", "lg"] as const;
 const BADGE_VARIANTS = ["default", "neutral", "success", "warning", "destructive", "outline"] as const;
+const BADGE_SIZES = ["default", "sm"] as const;
+const BADGE_ROUNDED = ["sm", "md", "lg", "full"] as const;
+
+const PIPELINE_STEPS: PipelineStep[] = [
+  {
+    key: "draft",
+    label: "Khởi tạo",
+    description: "Tạo yêu cầu",
+    status: "done",
+    at: "09:12 12/08/2026",
+  },
+  {
+    key: "review",
+    label: "Kiểm duyệt",
+    description: "Đã duyệt nội dung",
+    status: "done",
+    at: "10:40 12/08/2026",
+  },
+  {
+    key: "approve",
+    label: "Phê duyệt",
+    description: "Chờ trưởng bộ phận",
+    status: "current",
+    at: "Đang xử lý",
+  },
+  { key: "pay", label: "Thanh toán", description: "Chưa tới lượt", status: "todo" },
+  { key: "done", label: "Hoàn tất", status: "todo" },
+];
+
+const PIPELINE_VARIANTS: Array<{ code: PipelineVariant; title: string }> = [
+  { code: "steps", title: "Vòng tròn đánh số" },
+  { code: "chevron", title: "Chip nối mũi tên" },
+  { code: "bar", title: "Thanh chia đoạn" },
+  { code: "timeline", title: "Mốc dọc" },
+];
 
 /** Thư viện component — nơi xem nhanh mọi biến thể trước khi dùng. */
 function ComponentsPage() {
@@ -112,7 +152,39 @@ function ComponentsPage() {
                   </Badge>
                 ))}
               </div>
+
               <Separator />
+
+              <div className="space-y-2">
+                {BADGE_SIZES.map((size) => (
+                  <div key={size} className="flex flex-wrap items-center gap-2">
+                    <span className="w-24 shrink-0 text-xs text-muted-foreground">
+                      size {size}
+                    </span>
+                    <Badge size={size}>Mặc định</Badge>
+                    <Badge size={size} variant="success">
+                      Thành công
+                    </Badge>
+                    <Badge size={size} variant="outline">
+                      Viền
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+
+              <Separator />
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="w-24 shrink-0 text-xs text-muted-foreground">rounded</span>
+                {BADGE_ROUNDED.map((rounded) => (
+                  <Badge key={rounded} variant="neutral" rounded={rounded}>
+                    {rounded}
+                  </Badge>
+                ))}
+              </div>
+
+              <Separator />
+
               <div className="flex flex-wrap gap-2">
                 {["active", "pending", "processing", "failed", "draft", "archived"].map((status) => (
                   <StatusBadge key={status} status={status} />
@@ -206,6 +278,27 @@ function ComponentsPage() {
             </div>
           </SectionCard>
         </div>
+
+        <SectionCard
+          title="Pipeline / tiến trình"
+          description="Cùng một mảng bước, đổi hình dạng bằng prop variant."
+        >
+          <div className="space-y-6">
+            {PIPELINE_VARIANTS.map((item) => (
+              <div key={item.code} className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">{item.title}</span>
+                  <Badge variant="outline" size="sm" rounded="full" className="font-mono">
+                    variant=&quot;{item.code}&quot;
+                  </Badge>
+                </div>
+                <div className={item.code === "bar" ? "max-w-sm" : undefined}>
+                  <Pipeline steps={PIPELINE_STEPS} variant={item.code} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
 
         <SectionCard title="Thông báo tại chỗ">
           <div className="space-y-3">

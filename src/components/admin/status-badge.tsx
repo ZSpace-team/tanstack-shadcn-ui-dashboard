@@ -26,9 +26,24 @@ const STATUS_MAP: Record<string, { label: string; variant: BadgeVariant }> = {
   archived: { label: "Lưu trữ", variant: "neutral" },
 };
 
-export function StatusBadge({ status, label }: { status: string; label?: string }) {
+export function StatusBadge({
+  status,
+  label,
+  size,
+  rounded,
+}: {
+  status: string;
+  label?: string;
+  /** Chuyển sang cỡ nhỏ khi đứng cạnh chữ nhỏ. */
+  size?: "default" | "sm";
+  rounded?: "sm" | "md" | "lg" | "full";
+}) {
   const config = STATUS_MAP[status];
-  return <Badge variant={config?.variant ?? "neutral"}>{label ?? config?.label ?? status}</Badge>;
+  return (
+    <Badge variant={config?.variant ?? "neutral"} size={size} rounded={rounded}>
+      {label ?? config?.label ?? status}
+    </Badge>
+  );
 }
 
 export { STATUS_MAP };

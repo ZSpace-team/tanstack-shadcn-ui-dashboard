@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium whitespace-nowrap [&_svg]:size-3 [&_svg]:shrink-0",
+  "inline-flex items-center gap-1 border font-medium whitespace-nowrap [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -15,18 +15,36 @@ const badgeVariants = cva(
         destructive: "border-transparent bg-destructive/15 text-destructive",
         outline: "border-border text-foreground",
       },
+      size: {
+        /** Cao 22px — dùng trong bảng, danh sách. */
+        default: "px-1.5 py-0.5 text-[11px] leading-4 [&_svg]:size-3",
+        /** Cao 16px — nhãn phụ đi kèm tiêu đề, chip trong ô hẹp. */
+        sm: "px-1.5 py-0 text-[10px] leading-[0.875rem] [&_svg]:size-2.5",
+      },
+      rounded: {
+        sm: "rounded-sm",
+        md: "rounded-md",
+        lg: "rounded-lg",
+        full: "rounded-full",
+      },
     },
-    defaultVariants: { variant: "default" },
+    defaultVariants: { variant: "default", size: "default", rounded: "md" },
   },
 );
 
 function Badge({
   className,
   variant,
+  size,
+  rounded,
   ...props
 }: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
   return (
-    <span data-slot="badge" className={cn(badgeVariants({ variant, className }))} {...props} />
+    <span
+      data-slot="badge"
+      className={cn(badgeVariants({ variant, size, rounded, className }))}
+      {...props}
+    />
   );
 }
 

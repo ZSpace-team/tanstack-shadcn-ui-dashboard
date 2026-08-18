@@ -37,7 +37,9 @@ src/
 **Dữ liệu** — `DataTable` (sắp xếp, chọn nhiều dòng, thanh hành động hàng loạt, skeleton,
 trạng thái rỗng), `Pagination`, `FilterBar` (tìm kiếm + select lọc nhanh không nhãn + nút mở
 bộ lọc nâng cao + chip xoá nhanh), `ColumnToggle` (chọn cột hiển thị, khoá cột định danh),
-`StatCard` (có % tăng giảm), `StatusBadge`, `EmptyState`.
+`StatCard` (có % tăng giảm), `StatusBadge`, `EmptyState`. `Badge` có 6 biến thể màu,
+2 cỡ (`default` cao 22px, `sm` cao 16px) và 4 mức bo góc (`sm`, `md`, `lg`, `full`);
+`StatusBadge` nhận luôn `size` và `rounded`.
 
 **Nhập liệu** — `FormSection`, `FormRow`, `FormField` (nhãn, bắt buộc, gợi ý, lỗi),
 `FormSelect`, `FormActions` (dính đáy), `MultiSelect` (chọn nhiều), `CheckboxGroup`,
@@ -60,6 +62,18 @@ với Đặt lại / Áp dụng), `ConfirmDialog`, `Callout`, toast qua `sonner`
 
 Xem đủ bốn kiểu ở tab **Kiểu hiển thị** của trang `/tabs`.
 
+**Tiến trình** — `Pipeline` nhận mảng bước (`status`: `done` / `current` / `todo` / `error`),
+đổi hình dạng bằng `variant`:
+
+| Mã view | Hình dạng | Dùng khi |
+|---|---|---|
+| `steps` | Vòng tròn đánh số nối bằng gạch ngang | Quy trình nhiều bước có tên |
+| `chevron` | Chip nối bằng mũi tên | Luồng trạng thái ngắn, đặt trong header |
+| `bar` | Thanh chia đoạn + đếm bước | Chỗ hẹp, cột phụ |
+| `timeline` | Mốc dọc kèm mô tả và thời gian | Nhật ký xử lý một bản ghi |
+
+Xem cả bốn kiểu ở trang `/components`.
+
 **Cá nhân hoá** — `ThemeSwitcher` (sáng/tối/theo hệ thống), `FontSwitcher` (Be Vietnam Pro /
 Inter / phông hệ thống), trạng thái thu gọn sidebar — đều lưu vào `localStorage`.
 
@@ -79,7 +93,9 @@ Inter / phông hệ thống), trạng thái thu gọn sidebar — đều lưu v�
 ## Tuỳ biến
 
 **Đổi màu thương hiệu** — sửa `--brand` trong `:root` và `.dark` của `src/styles/globals.css`.
-Ví dụ xanh dương: `oklch(0.55 0.2 255)`. Logo, avatar và mọi điểm nhấn đổi theo.
+Ví dụ xanh dương: `oklch(0.55 0.2 255)`. `--primary` và `--sidebar-primary` trỏ thẳng vào
+`--brand`, nên logo, avatar, nút chính, tab đang chọn, checkbox/switch và viền focus đều
+đổi theo — kể cả khi người dùng tự chọn tông khác trong menu tài khoản.
 
 **Đổi bo góc** — sửa `--radius` (mặc định `0.625rem`); các cỡ `sm/md/lg/xl` tự suy ra.
 
