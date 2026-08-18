@@ -4,10 +4,12 @@ import {
   LayoutGrid,
   ListChecks,
   LockKeyhole,
+  LogIn,
   Package,
   Settings,
   SlidersHorizontal,
   SquarePen,
+  UserPlus,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -50,6 +52,13 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: "/components", label: "Component", icon: LayoutGrid },
       { to: "/theme", label: "Tông màu", icon: SlidersHorizontal },
+    ],
+  },
+  {
+    label: "Xác thực",
+    items: [
+      { to: "/auth/login", label: "Đăng nhập", icon: LogIn },
+      { to: "/auth/register", label: "Đăng ký", icon: UserPlus },
     ],
   },
   {

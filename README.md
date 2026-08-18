@@ -74,6 +74,11 @@ Xem đủ bốn kiểu ở tab **Kiểu hiển thị** của trang `/tabs`.
 
 Xem cả bốn kiểu ở trang `/components`.
 
+**Xác thực** — `AuthCenteredLayout` và `AuthSplitLayout` (hai bố cục cho trang đăng nhập /
+đăng ký), cùng các mảnh form dùng chung: `AuthField`, `AuthPasswordField` (nút hiện/ẩn),
+`PasswordStrength` (thanh đo độ mạnh), `AuthDivider`, `AuthSocialButtons` (Google, GitHub),
+`AuthSubmitButton` (có trạng thái đang xử lý), `AuthThemeToggle`.
+
 **Cá nhân hoá** — `ThemeSwitcher` (sáng/tối/theo hệ thống), `FontSwitcher` (Be Vietnam Pro /
 Inter / phông hệ thống), trạng thái thu gọn sidebar — đều lưu vào `localStorage`.
 
@@ -89,6 +94,12 @@ Inter / phông hệ thống), trạng thái thu gọn sidebar — đều lưu v�
 | `/components` | Thư viện toàn bộ component và biến thể |
 | `/theme` | Bảng tra token màu, bo góc, cỡ chữ |
 | `/activity`, `/settings`, `/profile` | Nhật ký, cấu hình, tài khoản cá nhân |
+| `/auth/login`, `/auth/register` | Đăng nhập / đăng ký — mẫu căn giữa |
+| `/auth/login-split`, `/auth/register-split` | Đăng nhập / đăng ký — mẫu chia đôi màn hình |
+
+Bốn trang `/auth` nằm ngoài shell (không sidebar, không topbar) — `src/routes/__root.tsx`
+kiểm tra đường dẫn và bỏ qua `AdminShell` cho nhánh này. Nút chuyển "Căn giữa / Chia đôi"
+ở góc trên chỉ để xem demo, xoá đi khi dựng sản phẩm thật.
 
 ## Tuỳ biến
 
@@ -109,6 +120,11 @@ nếu người dùng thiếu quyền; nhóm rỗng tự biến mất.
 `android-chrome-512x512.png`) và sửa tên, `theme_color` trong `public/site.webmanifest`.
 Các thẻ `<link>` đã khai báo sẵn trong `index.html`.
 
+**Đổi mẫu trang đăng nhập** — hai bố cục dùng chung một API, nên đổi mẫu chỉ là đổi
+component bao ngoài trong `src/routes/auth.*.tsx`: `AuthCenteredLayout` (căn giữa, hợp hệ
+thống nội bộ) hoặc `AuthSplitLayout` (chia đôi, nửa trái là bảng giới thiệu — sửa nội dung
+qua `panelHeadline`, `panelPoints`, `panelQuote`).
+
 **Thêm trạng thái mới** — thêm vào `STATUS_MAP` trong
 `src/components/admin/status-badge.tsx` để mọi bảng hiển thị nhất quán.
 
@@ -117,11 +133,14 @@ Các thẻ `<link>` đã khai báo sẵn trong `index.html`.
 1. **Phiên đăng nhập** — `src/lib/session.tsx` đang trả dữ liệu giả. Thay phần `useState`
    bằng hook của thư viện auth bạn dùng, giữ nguyên ba trường `user`, `permissions`, `signOut`.
    Không component nào khác cần sửa.
-2. **Thông báo** — `src/lib/notifications.tsx` giữ danh sách giả trong bộ nhớ. Thay `useState`
+2. **Đăng nhập / đăng ký** — bốn trang `/auth` chỉ kiểm tra dữ liệu phía client rồi bắn toast
+   giả lập. Thay phần `setTimeout` trong hàm `submit()` bằng lời gọi API thật, sau đó điều
+   hướng về `/` — bố cục và các trường không cần sửa.
+3. **Thông báo** — `src/lib/notifications.tsx` giữ danh sách giả trong bộ nhớ. Thay `useState`
    bằng API (hoặc socket/SSE) và giữ nguyên `items`, `unreadCount`, `markRead`, `markAllRead`,
    `remove`, `clearAll`, `push`; chuông trên topbar không cần sửa.
-3. **Dữ liệu** — xoá `src/data/mock.ts`, thay bằng lời gọi API. `DataTable` không tự lọc hay
+4. **Dữ liệu** — xoá `src/data/mock.ts`, thay bằng lời gọi API. `DataTable` không tự lọc hay
    sắp xếp: nó nhận `rows`, `sort`, `page` từ bên ngoài nên chuyển sang xử lý phía server
    chỉ là đổi chỗ lấy dữ liệu.
-4. **Router** — thay bằng React Router hoặc Next.js được, chỉ cần sửa `Link`/`useNavigate`
+5. **Router** — thay bằng React Router hoặc Next.js được, chỉ cần sửa `Link`/`useNavigate`
    trong `admin-sidebar.tsx`, `admin-account-menu.tsx` và `breadcrumb.tsx`.

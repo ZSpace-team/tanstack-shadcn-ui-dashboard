@@ -1,4 +1,4 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet, createRootRoute, useRouterState } from "@tanstack/react-router";
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -27,7 +27,7 @@ function RootLayout() {
         <AccentPreferenceProvider>
           <SessionProvider>
             <NotificationsProvider>
-              <AdminShell />
+              <AppFrame />
               <Toaster position="top-right" />
             </NotificationsProvider>
           </SessionProvider>
@@ -35,6 +35,19 @@ function RootLayout() {
       </FontPreferenceProvider>
     </ThemeProvider>
   );
+}
+
+/**
+ * Chọn khung cho trang đang mở.
+ * Các trang dưới `/auth` (đăng nhập, đăng ký) chiếm trọn màn hình và tự dựng bố cục
+ * riêng — không có sidebar, không có topbar.
+ */
+function AppFrame() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+
+  if (pathname === "/auth" || pathname.startsWith("/auth/")) return <Outlet />;
+
+  return <AdminShell />;
 }
 
 /**
