@@ -36,7 +36,8 @@ src/
 
 **Dữ liệu** — `DataTable` (sắp xếp, chọn nhiều dòng, thanh hành động hàng loạt, skeleton,
 trạng thái rỗng), `Pagination`, `FilterBar` (tìm kiếm + select lọc nhanh không nhãn + nút mở
-bộ lọc nâng cao + chip xoá nhanh), `StatCard` (có % tăng giảm), `StatusBadge`, `EmptyState`.
+bộ lọc nâng cao + chip xoá nhanh), `ColumnToggle` (chọn cột hiển thị, khoá cột định danh),
+`StatCard` (có % tăng giảm), `StatusBadge`, `EmptyState`.
 
 **Nhập liệu** — `FormSection`, `FormRow`, `FormField` (nhãn, bắt buộc, gợi ý, lỗi),
 `FormSelect`, `FormActions` (dính đáy), `MultiSelect` (chọn nhiều), `CheckboxGroup`,
@@ -67,7 +68,7 @@ Inter / phông hệ thống), trạng thái thu gọn sidebar — đều lưu v�
 | Đường dẫn | Minh hoạ |
 |---|---|
 | `/` | Dashboard: thẻ số liệu, biểu đồ cột thuần CSS, danh sách hoạt động |
-| `/users` | Bảng đầy đủ: tab, tìm kiếm nhanh, bộ lọc nâng cao dạng slideover, sắp xếp, chọn dòng, phân trang, drawer, xác nhận xoá |
+| `/users` | Bảng đầy đủ: tab, tìm kiếm nhanh, bộ lọc nâng cao dạng slideover, chọn cột hiển thị, sắp xếp, chọn dòng, phân trang, drawer, xác nhận xoá |
 | `/products` | Chuyển đổi bảng ↔ lưới thẻ |
 | `/form` | Biểu mẫu chia thành card có header/footer, cột tóm tắt, kiểm tra dữ liệu, trạng thái đang lưu |
 | `/tabs` | Trang chi tiết với tab, breadcrumb và 4 kiểu view chi tiết |
@@ -86,6 +87,11 @@ Ví dụ xanh dương: `oklch(0.55 0.2 255)`. Logo, avatar và mọi điểm nh�
 nếu người dùng thiếu quyền; nhóm rỗng tự biến mất.
 
 **Đổi tên & logo** — sửa giá trị mặc định trong `src/components/admin/admin-brand.tsx`.
+
+**Đổi favicon / icon ứng dụng** — thay 6 file trong `public/` (`favicon.ico`, `favicon-16x16.png`,
+`favicon-32x32.png`, `apple-touch-icon.png`, `android-chrome-192x192.png`,
+`android-chrome-512x512.png`) và sửa tên, `theme_color` trong `public/site.webmanifest`.
+Các thẻ `<link>` đã khai báo sẵn trong `index.html`.
 
 **Thêm trạng thái mới** — thêm vào `STATUS_MAP` trong
 `src/components/admin/status-badge.tsx` để mọi bảng hiển thị nhất quán.

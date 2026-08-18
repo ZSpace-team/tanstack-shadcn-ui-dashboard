@@ -4,8 +4,9 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { CheckboxGroup, RadioGroup } from "@/components/admin/choice-group";
+import { ColumnToggle } from "@/components/admin/column-toggle";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
-import { DataTable, type SortState } from "@/components/admin/data-table";
+import { DataTable, type DataTableColumn, type SortState } from "@/components/admin/data-table";
 import { DateField, DateRangeField, type DateRange } from "@/components/admin/date-field";
 import { DetailView } from "@/components/admin/detail-view";
 import { Drawer } from "@/components/admin/drawer";
@@ -74,6 +75,50 @@ const EMPTY_FILTERS: AdvancedFilters = {
 
 const DAY = 86400000;
 
+/** Toàn bộ cột của bảng; `DEFAULT_COLUMNS` quyết định cột nào hiện lúc mới vào. */
+const USER_COLUMNS: DataTableColumn<MockUser>[] = [
+  {
+    key: "name",
+    label: "Người dùng",
+    sortable: true,
+    render: (row) => (
+      <div className="flex items-center gap-3">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold">
+          {getInitials(row.name)}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate font-medium">{row.name}</span>
+          <span className="block truncate text-xs text-muted-foreground">{row.email}</span>
+        </span>
+      </div>
+    ),
+  },
+  { key: "role", label: "Vai trò", sortable: true },
+  { key: "department", label: "Phòng ban", className: "hidden md:table-cell" },
+  {
+    key: "status",
+    label: "Trạng thái",
+    align: "center",
+    render: (row) => <StatusBadge status={row.status} />,
+  },
+  {
+    key: "createdAt",
+    label: "Ngày tạo",
+    sortable: true,
+    align: "end",
+    render: (row) => formatDate(row.createdAt),
+  },
+  {
+    key: "lastActiveAt",
+    label: "Hoạt động cuối",
+    sortable: true,
+    align: "end",
+    render: (row) => formatRelative(row.lastActiveAt),
+  },
+];
+
+const DEFAULT_COLUMNS = ["name", "role", "department", "status", "lastActiveAt"];
+
 /** Đếm số điều kiện đang bật — hiện lên badge của nút "Bộ lọc". */
 function countActive(filters: AdvancedFilters) {
   return [
@@ -99,6 +144,7 @@ function UsersPage() {
   /** Giá trị đang sửa trong panel — chỉ đổ vào `filters` khi bấm Áp dụng. */
   const [draft, setDraft] = useState<AdvancedFilters>(EMPTY_FILTERS);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(DEFAULT_COLUMNS);
   const [sort, setSort] = useState<SortState>({ key: "lastActiveAt", direction: "desc" });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -271,6 +317,17 @@ function UsersPage() {
           setDraft(EMPTY_FILTERS);
           resetPage();
         }}
+        actions={
+          <ColumnToggle
+            columns={USER_COLUMNS.map((column) => ({
+              key: column.key,
+              label: column.label,
+              locked: column.key === "name",
+            }))}
+            visible={visibleColumns}
+            onVisibleChange={setVisibleColumns}
+          />
+        }
       />
 
       <DataTable<MockUser>
@@ -295,39 +352,7 @@ function UsersPage() {
             </Button>
           </>
         }
-        columns={[
-          {
-            key: "name",
-            label: "Người dùng",
-            sortable: true,
-            render: (row) => (
-              <div className="flex items-center gap-3">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold">
-                  {getInitials(row.name)}
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate font-medium">{row.name}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{row.email}</span>
-                </span>
-              </div>
-            ),
-          },
-          { key: "role", label: "Vai trò", sortable: true },
-          { key: "department", label: "Phòng ban", className: "hidden md:table-cell" },
-          {
-            key: "status",
-            label: "Trạng thái",
-            align: "center",
-            render: (row) => <StatusBadge status={row.status} />,
-          },
-          {
-            key: "lastActiveAt",
-            label: "Hoạt động cuối",
-            sortable: true,
-            align: "end",
-            render: (row) => formatRelative(row.lastActiveAt),
-          },
-        ]}
+        columns={USER_COLUMNS.filter((column) => visibleColumns.includes(column.key))}
       />
 
       <Pagination
